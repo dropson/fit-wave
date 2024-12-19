@@ -172,10 +172,12 @@ id="sidebar" style="">
           </div>
         </div>
         <div class="menu-item py-1.5">
-          <a class="btn btn-sm btn-light justify-center"
-            href="/metronic/tailwind/demo1/authentication/classic/sign-in">
-            Log out
-          </a>
+          <form method="POST" class="flex justify-center" action="{{ route('logout') }}">
+            @csrf
+            <button class="btn btn-sm btn-light justify-center w-full" type="submit" href="route('logout')">
+              Вихід
+            </button>
+          </form>
         </div>
       </div>
     </div>

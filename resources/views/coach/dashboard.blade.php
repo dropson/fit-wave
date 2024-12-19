@@ -3,6 +3,6 @@
 @section('content')
 
 
-Dashboard Admin
+Dashboard coach
 
 @endsection

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Coach;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -15,37 +17,35 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): View
+
+    public function showLoginForm(): View
+    {
+        return view('auth.login');
+    }
+    public function showRegisterForm(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+
+    public function registerCoach(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        $data = $request->validate([
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|confirmed|min:6',
+            'password_confirmation' => 'required'
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+        $user = User::create($data);
+        $user->assignRole(UserRoleEnum::Coach->value);
+
+        Coach::create([
+            'user_id' => $user->id,
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('coach.dashboard');
     }
 }

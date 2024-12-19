@@ -11,7 +11,7 @@
       <span class="text-2sm text-gray-700 me-1.5">
         Маєте аккаунт ?
       </span>
-      <a class="text-2sm link" href="{{ route('login') }}">
+      <a class="text-2sm link" href="{{ route('home') }}">
         Вхід
       </a>
     </div>
